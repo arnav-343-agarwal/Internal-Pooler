@@ -28,6 +28,10 @@ const rideSchema = new mongoose.Schema({
   requests: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'RideRequest'
+  }],
+  joinedUsers: [{    // ✅ NEW FIELD HERE
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }]
 }, { timestamps: true });
 

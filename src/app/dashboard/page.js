@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [postedRides, setPostedRides] = useState([]);
   const [joinedRides, setJoinedRides] = useState([]);
@@ -59,7 +62,12 @@ export default function DashboardPage() {
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-semibold">Welcome, {user?.name}</h1>
 
-      <Button className="bg-blue-600 text-white">+ Create New Ride</Button>
+      <Button
+        className="bg-blue-600 text-white"
+        onClick={() => router.push("/post-ride")}
+      >
+        + Create New Ride
+      </Button>
 
       {/* Posted Rides Section */}
       <section>
