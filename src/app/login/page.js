@@ -15,28 +15,28 @@ export default function LoginPage() {
   const [error, setError] = useState('')
 
 const handleLogin = async (e) => {
-  e.preventDefault()
-  setError('')
+  e.preventDefault();
+  setError('');
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
-    })
+    });
 
     if (!res.ok) {
-      const errData = await res.json()
-      throw new Error(errData.message || 'Login failed')
+      const errData = await res.json();
+      throw new Error(errData.message || 'Login failed');
     }
 
-    const data = await res.json()
-    localStorage.setItem('token', data.token)
-    router.push('/dashboard')
+    const data = await res.json();
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user)); // 👈 Add this line
+    router.push('/dashboard');
   } catch (err) {
-    setError(err.message)
+    setError(err.message);
   }
-}
-
+};
 
   const handleGoogleLogin = () => {
     window.location.href = '/api/auth/google'
