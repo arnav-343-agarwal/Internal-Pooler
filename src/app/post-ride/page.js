@@ -1,5 +1,5 @@
 "use client";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function PostRidePage() {
+const [token, setToken] = useState('');
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const t = localStorage.getItem('token');
+    setToken(t);
+    if (!t) {
       router.push("/login");
     }
     // else console.log(token)
@@ -37,7 +39,10 @@ export default function PostRidePage() {
     try {
       const res = await fetch("/api/rides/create", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(form),
       });
 

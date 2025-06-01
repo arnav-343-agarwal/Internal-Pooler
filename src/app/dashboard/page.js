@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from "react";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null);
@@ -12,23 +12,24 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
-      const userRes = await fetch('/api/users/me', {
-        headers: { Authorization: `Bearer ${token}` }
+      const userRes = await fetch("/api/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
       });
       const userData = await userRes.json();
       setUser(userData);
 
-      const ridesRes = await fetch('/api/rides/mine', {
-        headers: { Authorization: `Bearer ${token}` }
+      const ridesRes = await fetch("/api/rides/mine", {
+        headers: { Authorization: `Bearer ${token}` },
       });
+      console.log(ridesRes);
       const ridesData = await ridesRes.json();
-        setPostedRides(ridesData.posted || []);
-        setJoinedRides(ridesData.joined || []);
+      setPostedRides(ridesData.posted || []);
+      setJoinedRides(ridesData.joined || []);
 
-      const reqRes = await fetch('/api/riderRequests/received', {
-        headers: { Authorization: `Bearer ${token}` }
+      const reqRes = await fetch("/api/riderRequests/received", {
+        headers: { Authorization: `Bearer ${token}` },
       });
       const requestsData = await reqRes.json();
       setReceivedRequests(requestsData);
@@ -38,18 +39,18 @@ export default function DashboardPage() {
   }, []);
 
   const handleRespond = async (requestId, status) => {
-    const token = localStorage.getItem('token');
-    await fetch('/api/riderRequests/respond', {
-      method: 'POST',
+    const token = localStorage.getItem("token");
+    await fetch("/api/riderRequests/respond", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ requestId, status })
+      body: JSON.stringify({ requestId, status }),
     });
 
     // Refresh data after responding
-    const newReqs = receivedRequests.filter(r => r._id !== requestId);
+    const newReqs = receivedRequests.filter((r) => r._id !== requestId);
     setReceivedRequests(newReqs);
   };
 
@@ -66,11 +67,16 @@ export default function DashboardPage() {
           {postedRides.map((ride) => (
             <Card key={ride._id}>
               <CardHeader>
-                {ride.from.text} → {ride.to.text} ({new Date(ride.dateTime).toLocaleString()})
+                {(ride.from?.text || ride.from) ?? "Unknown"} →{" "}
+                {(ride.to?.text || ride.to) ?? "Unknown"} (
+                {new Date(ride.dateTime).toLocaleString()})
               </CardHeader>
+
               <CardContent>
                 <p>{ride.description}</p>
-                <p className="text-sm text-gray-500">Max Seats: {ride.maxSeats}</p>
+                <p className="text-sm text-gray-500">
+                  Max Seats: {ride.maxSeats}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -79,18 +85,33 @@ export default function DashboardPage() {
 
       {/* Received Requests */}
       <section>
-        <h2 className="text-xl font-medium mb-2">Join Requests for Your Rides</h2>
+        <h2 className="text-xl font-medium mb-2">
+          Join Requests for Your Rides
+        </h2>
         {receivedRequests.length === 0 ? (
           <p className="text-sm text-muted-foreground">No new requests</p>
         ) : (
           receivedRequests.map((req) => (
-            <Card key={req._id} className="flex justify-between items-center p-4">
+            <Card
+              key={req._id}
+              className="flex justify-between items-center p-4"
+            >
               <div>
-                <p><strong>{req.user.name}</strong> requested to join ride: {req.ride.from.text} → {req.ride.to.text}</p>
+                <p>
+                  <strong>{req.user.name}</strong> requested to join ride:{" "}
+                  {req.ride.from.text} → {req.ride.to.text}
+                </p>
               </div>
               <div className="space-x-2">
-                <Button onClick={() => handleRespond(req._id, 'approved')}>Approve</Button>
-                <Button variant="destructive" onClick={() => handleRespond(req._id, 'rejected')}>Reject</Button>
+                <Button onClick={() => handleRespond(req._id, "approved")}>
+                  Approve
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleRespond(req._id, "rejected")}
+                >
+                  Reject
+                </Button>
               </div>
             </Card>
           ))
@@ -104,8 +125,11 @@ export default function DashboardPage() {
           {joinedRides.map((ride) => (
             <Card key={ride._id}>
               <CardHeader>
-                {ride.from.text} → {ride.to.text} ({new Date(ride.dateTime).toLocaleString()})
+                {(ride.from?.text || ride.from) ?? "Unknown"} →{" "}
+                {(ride.to?.text || ride.to) ?? "Unknown"} (
+                {new Date(ride.dateTime).toLocaleString()})
               </CardHeader>
+
               <CardContent>
                 <p>{ride.description}</p>
               </CardContent>
