@@ -30,5 +30,16 @@ export async function POST(req) {
   rideRequest.status = action === 'approve' ? 'approved' : 'rejected';
   await rideRequest.save();
 
+  if (action === 'approve') {
+  if (ride.joinedUsers.length >= ride.maxSeats) {
+    return new Response('No seats available', { status: 400 });
+  }
+
+  if (!ride.joinedUsers.includes(rideRequest.requester)) {
+    ride.joinedUsers.push(rideRequest.requester);
+    await ride.save();
+  }
+}
+
   return Response.json({ success: true, rideRequest });
 }

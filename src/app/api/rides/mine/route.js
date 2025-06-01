@@ -8,7 +8,11 @@ export async function GET(req) {
 
   const posted = await Ride.find({ poster: user._id }).sort({ dateTime: 1 });
 
-  const rideRequests = await RideRequest.find({ requester: user._id }).populate('ride');
+  const rideRequests = await RideRequest.find({ 
+    requester: user._id, 
+    status: 'approved' // ✅ Only approved join requests
+  }).populate('ride');
+
   const joined = rideRequests.map(req => req.ride);
 
   return Response.json({ posted, joined });
