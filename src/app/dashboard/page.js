@@ -32,7 +32,8 @@ export default function DashboardPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const requestsData = await reqRes.json();
-      setReceivedRequests(requestsData);
+      // console.log(requestsData)
+      setReceivedRequests(requestsData.requests || []);
     };
 
     fetchData();
@@ -98,8 +99,9 @@ export default function DashboardPage() {
             >
               <div>
                 <p>
-                  <strong>{req.user.name}</strong> requested to join ride:{" "}
-                  {req.ride.from.text} → {req.ride.to.text}
+                  <strong>{req.user?.name ?? "Unknown User"}</strong> requested
+                  to join ride: {req.ride?.from?.text ?? "?"} →{" "}
+                  {req.ride?.to?.text ?? "?"}
                 </p>
               </div>
               <div className="space-x-2">

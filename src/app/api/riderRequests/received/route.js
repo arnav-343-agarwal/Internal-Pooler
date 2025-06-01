@@ -17,6 +17,6 @@ export async function GET(req) {
 
   // Filter out requests where ride is null (not posted by this user)
   const filtered = requests.filter(r => r.ride !== null);
-
+  // console.log(filtered)
   return Response.json({ success: true, requests: filtered });
 }
