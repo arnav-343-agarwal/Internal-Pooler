@@ -6,7 +6,9 @@ export async function GET(req) {
   if (!user) return new Response('Unauthorized', { status: 401 });
 
   // Find requests where the ride's poster is the user
-  const requests = await RideRequest.find()
+  const requests = await RideRequest.find({
+    status: 'pending'
+  })
     .populate({
       path: 'ride',
       match: { poster: user._id },

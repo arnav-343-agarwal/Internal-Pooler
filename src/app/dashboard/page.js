@@ -43,20 +43,29 @@ export default function DashboardPage() {
   }, []);
 
   const handleRespond = async (requestId, status) => {
-    const token = localStorage.getItem("token");
-    await fetch("/api/riderRequests/respond", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ requestId, status }),
-    });
+  const token = localStorage.getItem("token");
+  const action = status === "approved" ? "approve" : "reject";
 
-    // Refresh data after responding
-    const newReqs = receivedRequests.filter((r) => r._id !== requestId);
-    setReceivedRequests(newReqs);
-  };
+  const res = await fetch("/api/riderRequests/respond", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ requestId, action }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error("Failed to respond:", err);
+    return;
+  }
+
+  // Optimistically remove from UI
+  const newReqs = receivedRequests.filter((r) => r._id !== requestId);
+  setReceivedRequests(newReqs);
+};
+
 
   return (
     <div className="p-6 space-y-6">

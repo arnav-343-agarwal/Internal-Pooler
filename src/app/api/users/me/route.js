@@ -6,13 +6,15 @@ export async function GET(req) {
 
   // Exclude sensitive info like password
   const userProfile = {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    googleId: user.googleId || null,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  };
+  _id: user._id,
+  name: user.name,
+  email: user.email,
+  googleId: user.googleId || null,
+  createdAt: user.createdAt,
+  updatedAt: user.updatedAt,
+  joinedRides: user.joinedRides || [],
+  createdRides: user.createdRides || [],
+};
 
   return Response.json({ success: true, user: userProfile });
 }
