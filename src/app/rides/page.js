@@ -34,9 +34,13 @@ export default function RidesPage() {
 
 
   const handleRequest = async (rideId) => {
+    const token = localStorage.getItem('token');
     const res = await fetch("/api/riderRequests/create", {
       method: "POST",
       body: JSON.stringify({ rideId }),
+      headers: {
+          'Authorization': `Bearer ${token}`,
+        },
     });
 
     if (res.ok) {
