@@ -17,5 +17,20 @@ export async function GET(req) {
     _id: { $nin: requestedRideIds },
   }).populate("poster");
 
-  return Response.json({ success: true, rides });
+  // For each ride, calculate number of accepted requests
+  const ridesWithAvailability = await Promise.all(
+    rides.map(async (ride) => {
+      const acceptedCount = await RideRequest.countDocuments({
+        ride: ride._id,
+        status: "accepted", // or "approved" if that's your updated enum
+      });
+
+      return {
+        ...ride.toObject(),
+        availableSeats: ride.maxSeats - acceptedCount,
+      };
+    })
+  );
+
+  return Response.json({ success: true, rides: ridesWithAvailability });
 }

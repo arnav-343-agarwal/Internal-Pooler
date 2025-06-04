@@ -91,7 +91,7 @@ export default function DashboardPage() {
               <CardContent>
                 <p>{ride.description}</p>
                 <p className="text-sm text-gray-500">
-                  Max Seats: {ride.maxSeats}
+                  Max Seats: {ride.maxSeats} | Available: {ride.availableSeats}
                 </p>
               </CardContent>
             </Card>

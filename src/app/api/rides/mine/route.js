@@ -8,6 +8,12 @@ export async function GET(req) {
 
   const posted = await Ride.find({ poster: user._id }).sort({ dateTime: 1 });
 
+  // Add availableSeats dynamically
+  const postedWithAvailability = posted.map(ride => ({
+    ...ride.toObject(),
+    availableSeats: ride.maxSeats - (ride.joinedUsers?.length || 0)
+  }));
+
   const rideRequests = await RideRequest.find({ 
     requester: user._id, 
     status: 'accepted' // ✅ Only approved join requests
@@ -15,5 +21,5 @@ export async function GET(req) {
 
   const joined = rideRequests.map(req => req.ride);
 
-  return Response.json({ posted, joined });
+  return Response.json({ posted: postedWithAvailability, joined });
 }
