@@ -10,7 +10,7 @@ export async function GET(req) {
 
   const rideRequests = await RideRequest.find({ 
     requester: user._id, 
-    status: 'approved' // ✅ Only approved join requests
+    status: 'accepted' // ✅ Only approved join requests
   }).populate('ride');
 
   const joined = rideRequests.map(req => req.ride);

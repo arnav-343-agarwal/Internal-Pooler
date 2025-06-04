@@ -5,7 +5,6 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
@@ -43,29 +42,28 @@ export default function DashboardPage() {
   }, []);
 
   const handleRespond = async (requestId, status) => {
-  const token = localStorage.getItem("token");
-  const action = status === "approved" ? "approve" : "reject";
+    const token = localStorage.getItem("token");
+    const action = status === "approved" ? "approve" : "reject";
 
-  const res = await fetch("/api/riderRequests/respond", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ requestId, action }),
-  });
+    const res = await fetch("/api/riderRequests/respond", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ requestId, action }),
+    });
 
-  if (!res.ok) {
-    const err = await res.text();
-    console.error("Failed to respond:", err);
-    return;
-  }
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("Failed to respond:", err);
+      return;
+    }
 
-  // Optimistically remove from UI
-  const newReqs = receivedRequests.filter((r) => r._id !== requestId);
-  setReceivedRequests(newReqs);
-};
-
+    // Optimistically remove from UI
+    const newReqs = receivedRequests.filter((r) => r._id !== requestId);
+    setReceivedRequests(newReqs);
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -116,8 +114,8 @@ export default function DashboardPage() {
             >
               <div>
                 <p>
-                  <strong>{req.user?.name ?? "Unknown User"}</strong> requested
-                  to join ride: {req.ride?.from?.text ?? "?"} →{" "}
+                  <strong>{req.requester?.name ?? "Unknown User"}</strong>{" "}
+                  requested to join ride: : {req.ride?.from?.text ?? "?"} →{" "}
                   {req.ride?.to?.text ?? "?"}
                 </p>
               </div>
