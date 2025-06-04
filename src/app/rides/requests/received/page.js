@@ -16,6 +16,7 @@ export default function ReceivedRequestsPage() {
         });
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
+        console.log(data)
         setRequests(data.requests || []);
       } catch (err) {
         console.error(err.message);
@@ -54,7 +55,7 @@ export default function ReceivedRequestsPage() {
         requests.map((req) => (
           <Card key={req._id}>
             <CardHeader>
-              <p><strong>{req.sender?.name}</strong> wants to join your ride</p>
+              <p><strong>{req.requester?.name}</strong> wants to join your ride</p>
               <p>{req.ride?.from?.text} → {req.ride?.to?.text}</p>
               <p className="text-sm text-gray-500">{new Date(req.ride?.dateTime).toLocaleString()}</p>
             </CardHeader>
