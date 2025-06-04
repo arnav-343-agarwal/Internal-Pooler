@@ -7,40 +7,39 @@ export default function RidesPage() {
   const [rides, setRides] = useState([]);
 
   useEffect(() => {
-  async function fetchRides() {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/rides/all', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+    async function fetchRides() {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("/api/rides/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || 'Failed to fetch rides');
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || "Failed to fetch rides");
+        }
+
+        const data = await res.json();
+        setRides(data.rides || []);
+      } catch (err) {
+        console.error("Error fetching rides:", err);
+        setRides([]);
       }
-
-      const data = await res.json();
-      setRides(data.rides || []);
-    } catch (err) {
-      console.error('Error fetching rides:', err);
-      setRides([]);
     }
-  }
 
-  fetchRides();
-}, []);
-
+    fetchRides();
+  }, []);
 
   const handleRequest = async (rideId) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const res = await fetch("/api/riderRequests/create", {
       method: "POST",
       body: JSON.stringify({ rideId }),
       headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (res.ok) {
@@ -63,6 +62,10 @@ export default function RidesPage() {
           <CardContent>
             <p>Posted by: {ride.poster?.name || "Unknown"}</p>
             <p>{ride.description}</p>
+            <p className="text-sm text-gray-500">
+              Max Seats: {ride.maxSeats} | Available Seats:{" "}
+              {ride.availableSeats}
+            </p>
             <Button onClick={() => handleRequest(ride._id)}>
               Request to Join
             </Button>
