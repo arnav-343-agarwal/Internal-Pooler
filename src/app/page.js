@@ -1,55 +1,41 @@
-import MotionDiv from '@/components/MotionDiv'; // use relative path if needed
-import Link from 'next/link';
-import { Car, Users, Rocket } from 'lucide-react';
+// app/page.js
+import Link from "next/link";
+import MotionDiv from "@/components/MotionDiv";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-white to-blue-50 px-4">
-      <MotionDiv
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-4xl md:text-6xl font-bold text-blue-700 mb-6 text-center"
-      >
-        Welcome to RidePool 🚗
-      </MotionDiv>
-
-      <MotionDiv
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        className="text-lg text-gray-700 mb-8 text-center max-w-2xl"
-      >
-        Your all-in-one platform to post rides, find nearby routes, join trips, and manage requests.
-      </MotionDiv>
-
-      <Link href="/dashboard">
+    <main className="min-h-screen bg-[#f9fafb] px-6 flex items-center justify-center">
+      <div className="max-w-4xl text-center space-y-10">
         <MotionDiv
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow hover:shadow-lg transition cursor-pointer"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight"
         >
-          Get Started
+          RidePool
         </MotionDiv>
-      </Link>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 w-full max-w-5xl">
-        <FeatureCard icon={<Car />} title="Post a Ride" />
-        <FeatureCard icon={<Users />} title="Join Rides" />
-        <FeatureCard icon={<Rocket />} title="Manage Requests" />
+        <MotionDiv
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto"
+        >
+          A seamless way to organize, post, and join rides with people you trust. Built for communities, colleges, and professionals.
+        </MotionDiv>
+
+        <MotionDiv
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Link href="/dashboard">
+            <div className="inline-block bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-medium shadow hover:bg-blue-700 transition">
+              Explore Dashboard
+            </div>
+          </Link>
+        </MotionDiv>
       </div>
     </main>
-  );
-}
-
-function FeatureCard({ icon, title }) {
-  return (
-    <MotionDiv
-      whileHover={{ y: -4, scale: 1.02 }}
-      className="bg-white p-6 rounded-2xl shadow-md flex items-center gap-4 hover:bg-blue-50 transition"
-    >
-      <div className="text-blue-600">{icon}</div>
-      <h3 className="text-lg font-semibold">{title}</h3>
-    </MotionDiv>
   );
 }
