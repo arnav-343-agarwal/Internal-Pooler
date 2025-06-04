@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import {
-  Home, Car, Send, Inbox, PlusCircle, LocateIcon, LogOut, LayoutDashboard,
+  Home, Car, Send, Inbox, PlusCircle, LocateIcon, LogOut, LogIn, LayoutDashboard,
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -26,6 +26,8 @@ export default function Sidebar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    setUser(null);
     router.push('/');
   };
 
@@ -41,32 +43,50 @@ export default function Sidebar() {
     </Link>
   );
 
-  if (!isClient || !isLoggedIn) return null;
-
   return (
     <aside className="fixed top-0 left-0 h-full w-64 bg-white shadow-md flex flex-col justify-between">
       <div className="p-4 space-y-4">
         <h2 className="text-xl font-bold text-blue-600">RidePool</h2>
 
-        <NavItem href="/dashboard" icon={LayoutDashboard} label="Dashboard" />
-        <NavItem href="/rides/nearby" icon={LocateIcon} label="Nearby Rides" />
-        <NavItem href="/post-ride" icon={PlusCircle} label="Post a Ride" />
-        <NavItem href="/rides" icon={Car} label="All Rides" />
-        <NavItem href="/rides/requests/received" icon={Inbox} label="Join Requests" />
-        <NavItem href="/rides/requests/sent" icon={Send} label="Sent Requests" />
+        {isLoggedIn ? (
+          <>
+            <NavItem href="/dashboard" icon={LayoutDashboard} label="Dashboard" />
+            <NavItem href="/rides/nearby" icon={LocateIcon} label="Nearby Rides" />
+            <NavItem href="/post-ride" icon={PlusCircle} label="Post a Ride" />
+            <NavItem href="/rides" icon={Car} label="All Rides" />
+            <NavItem href="/rides/requests/received" icon={Inbox} label="Join Requests" />
+            <NavItem href="/rides/requests/sent" icon={Send} label="Sent Requests" />
+          </>
+        ) : (
+          <>
+            <NavItem href="/" icon={Home} label="Home" />
+          </>
+        )}
       </div>
 
       <div className="p-4 border-t">
-        <div className="text-sm text-gray-600 mb-2">
-          Hello, <span className="font-semibold">{user?.name}</span>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 text-red-600 hover:text-red-800 transition"
-        >
-          <LogOut className="w-4 h-4" />
-          Logout
-        </button>
+        {isLoggedIn ? (
+          <>
+            <div className="text-sm text-gray-600 mb-2">
+              Hello, <span className="font-semibold">{user?.name}</span>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-red-600 hover:text-red-800 transition"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link
+            href="/login"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition"
+          >
+            <LogIn className="w-4 h-4" />
+            Login
+          </Link>
+        )}
       </div>
     </aside>
   );
